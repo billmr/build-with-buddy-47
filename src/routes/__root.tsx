@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { CartProvider } from "../components/CartProvider";
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 
 function NotFoundComponent() {
   return (
@@ -77,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Bill Store — Streetwear minimaliste" },
+      { name: "description", content: "Bill Store : streetwear et accessoires urbains minimalistes." },
+      { name: "author", content: "Bill Store" },
+      { property: "og:title", content: "Bill Store — Streetwear minimaliste" },
+      { property: "og:description", content: "Bill Store : streetwear et accessoires urbains minimalistes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@BillStore" },
     ],
     links: [
       {
@@ -119,8 +122,29 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {/*
+        CartProvider entoure toute l'application pour que le panier
+        soit accessible partout : Header, pages produit, page panier.
+      */}
+      <CartProvider>
+        {/*
+          flex min-h-screen flex-col permet de pousser le footer en bas
+          de la page même si le contenu est court.
+        */}
+        <div className="flex min-h-screen flex-col">
+          <Header />
+
+          {/*
+            Outlet est l'endroit où TanStack Router affiche la page active.
+            Ne jamais le supprimer.
+          */}
+          <div className="flex-1">
+            <Outlet />
+          </div>
+
+          <Footer />
+        </div>
+      </CartProvider>
     </QueryClientProvider>
   );
 }
