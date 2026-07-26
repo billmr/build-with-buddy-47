@@ -1,77 +1,87 @@
-/*
- * ============================================
- * PAGE À PROPOS — /about
- * ============================================
- *
- * Cette page présente la marque et son histoire.
- * Elle est simple, informative et facile à personnaliser.
- */
-
 import React from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 
-// Déclaration de la route
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "À propos — Bill Store" },
-      { name: "description", content: "Découvre l'histoire et les valeurs de Bill Store." },
-      { property: "og:title", content: "À propos — Bill Store" },
-      { property: "og:description", content: "Découvre l'histoire et les valeurs de Bill Store." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { title: "Mentalité Zéro — Atelier Zéro" },
+      { name: "description", content: "La mission et les fondations d'Atelier Zéro." },
     ],
   }),
   component: AboutPage,
 });
 
 function AboutPage() {
+  const foundations = [
+    {
+      chapter: "Chapter 01",
+      title: "Le point de départ.",
+      label: "Void",
+      text: "L’espace où le bruit disparaît, où l’ego s’efface et où la création peut recommencer.",
+    },
+    {
+      chapter: "Chapter 02",
+      title: "La rupture nécessaire.",
+      label: "Impact",
+      text: "L’énergie cinétique qui permet de briser les anciennes habitudes et de provoquer le changement.",
+    },
+    {
+      chapter: "Chapter 03",
+      title: "La reconstruction.",
+      label: "Structure",
+      text: "La discipline transforme le vide en fondation, puis la fondation en identité.",
+    },
+  ];
+
   return (
-    <main className="min-h-screen">
-      {/* Hero de la page */}
-      <section className="bg-hero py-16">
-        <div className="container-shop text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-hero-foreground md:text-4xl">
-            À propos de Bill Store
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Une marque née de l'envie de proposer un style urbain simple, durable et accessible.
-          </p>
+    <main className="min-h-screen bg-black text-white">
+      <section className="container-az py-24">
+        <p className="text-label mb-8 text-white/50">The Foundation</p>
+        <h1 className="text-display text-5xl md:text-7xl lg:text-8xl">The Zero Mindset</h1>
+      </section>
+
+      <section className="container-az py-16">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-label mb-4 text-white/50">Brand Mission</p>
+            <h2 className="text-display text-3xl md:text-5xl">
+              Nous ne vendons pas seulement des vêtements.
+            </h2>
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="text-lg leading-relaxed text-white/70">
+              Atelier Zéro fournit une armure à celles et ceux qui ont le courage de recommencer. Chaque pièce traduit le passage du vide à la structure, puis de la structure à l’impact.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Contenu principal */}
-      <section className="container-shop py-12">
-        <div className="mx-auto max-w-3xl space-y-8">
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Notre histoire</h2>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              Bill Store a été créée pour offrir des vêtements et accessoires urbains qui allient
-              minimalisme et qualité. Nous croyons qu'un style épuré ne doit pas être synonyme de
-              banalité. Chaque pièce est pensée pour durer, aussi bien dans le temps que dans les
-              tendances.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Nos valeurs</h2>
-            <ul className="mt-4 list-inside list-disc space-y-2 text-muted-foreground">
-              <li>Qualité avant tout : matières durables et finitions soignées.</li>
-              <li>Design minimaliste : des pièces intemporelles faciles à porter.</li>
-              <li>Accessibilité : un style urbain à prix juste.</li>
-              <li>Responsabilité : nous privilégions les matériaux et procédés respectueux.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-semibold text-foreground">Pourquoi choisir Bill Store ?</h2>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              Parce que nous construisons une garde-robe pensée pour ceux qui bougent, créent et
-              explorent la ville. Nos produits sont conçus pour être portés au quotidien, en toute
-              occasion.
-            </p>
-          </div>
+      <section className="container-az py-16">
+        <div className="grid gap-8 md:grid-cols-3">
+          {foundations.map((f) => (
+            <div key={f.label} className="border-t border-white/10 pt-8">
+              <p className="text-label mb-4 text-white/40">{f.chapter}</p>
+              <h3 className="text-lg font-bold uppercase tracking-widest">{f.title}</h3>
+              <p className="mt-2 text-2xl font-bold uppercase tracking-tighter">{f.label}</p>
+              <p className="mt-4 text-sm leading-relaxed text-white/60">{f.text}</p>
+              <ArrowUpRight className="mt-6 h-5 w-5 text-white/40" />
+            </div>
+          ))}
         </div>
+      </section>
+
+      <section className="container-az py-24 text-center">
+        <blockquote className="text-2xl font-bold italic text-white/80 md:text-4xl">
+          “The exact moment when nothing becomes everything.”
+        </blockquote>
+        <p className="mt-6 text-label text-white/40">Atelier Ø</p>
+      </section>
+
+      <section className="container-az py-16 text-center">
+        <h2 className="text-display text-4xl md:text-6xl">Start from nothing.</h2>
+        <h2 className="text-display text-4xl md:text-6xl text-white/40">Become everything.</h2>
+        <Link to="/shop" className="az-button-outline mx-auto mt-10">Shop</Link>
       </section>
     </main>
   );

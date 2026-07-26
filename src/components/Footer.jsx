@@ -1,91 +1,65 @@
 /*
  * ============================================
- * PIED DE PAGE — Footer
+ * PIED DE PAGE — ATELIER ZÉRO
  * ============================================
- *
- * Ce composant affiche le pied de page du site.
- * Il est visible sur toutes les pages car il est inclus dans __root.tsx.
  */
 
 import React from "react";
 import { Link } from "@tanstack/react-router";
-import { Instagram, Twitter, Facebook } from "lucide-react";
 
 export function Footer() {
-  // Année actuelle pour le copyright (généré côté client)
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="mt-auto border-t border-border bg-background">
-      <div className="container-shop py-12">
-        <div className="grid gap-8 md:grid-cols-3">
-          {/* Colonne 1 : Marque et description */}
+    <footer className="border-t border-white/10 bg-black py-16 text-white">
+      <div className="container-az">
+        <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <Link to="/" className="text-lg font-bold text-foreground">
-              Bill Store
+            <Link to="/" className="text-2xl font-bold uppercase tracking-tighter">
+              Atelier Ø
             </Link>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Streetwear et accessoires urbains minimalistes. Style épuré, qualité durable.
+            <p className="mt-4 text-sm leading-relaxed text-white/60">
+              Start from nothing.
+              <br />
+              Become everything.
             </p>
           </div>
 
-          {/* Colonne 2 : Liens utiles */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">Liens</h3>
-            <nav className="mt-4 flex flex-col gap-2">
-              <Link to="/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Accueil
-              </Link>
-              <Link to="/products" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Catalogue
-              </Link>
-              <Link to="/about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                À propos
-              </Link>
-              <Link to="/contact" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                Contact
-              </Link>
-            </nav>
+          <div className="flex flex-col gap-3">
+            <span className="text-label text-white/40">Navigation</span>
+            <Link to="/shop" className="text-sm uppercase tracking-widest text-white/80 hover:text-white">
+              Shop
+            </Link>
+            <Link to="/about" className="text-sm uppercase tracking-widest text-white/80 hover:text-white">
+              La marque
+            </Link>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm uppercase tracking-widest text-white/80 hover:text-white"
+            >
+              Instagram
+            </a>
+            <a
+              href="mailto:contact@atelierzero.fr"
+              className="text-sm uppercase tracking-widest text-white/80 hover:text-white"
+            >
+              Contact
+            </a>
           </div>
 
-          {/* Colonne 3 : Réseaux sociaux */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground">Suivez-nous</h3>
-            <div className="mt-4 flex gap-4">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-            </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-label text-white/40">Informations</span>
+            <p className="text-sm uppercase tracking-widest text-white/80">Livraison internationale</p>
+            <p className="text-sm uppercase tracking-widest text-white/80">Paiement sécurisé</p>
+            <p className="text-sm uppercase tracking-widest text-white/80">Retours sous 14 jours</p>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          © {currentYear} Bill Store. Tous droits réservés.
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
+          <p className="text-xs uppercase tracking-widest text-white/40">
+            © 2026 Atelier Zéro — France / Worldwide
+          </p>
+          <p className="text-xs uppercase tracking-widest text-white/40">Version 01</p>
         </div>
       </div>
     </footer>
