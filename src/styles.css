@@ -144,10 +144,10 @@
   background: var(--color-primary);
   color: var(--color-primary-foreground);
   transition: opacity 0.2s ease;
-}
 
-@utility az-button:hover {
-  opacity: 0.85;
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 @utility az-button-outline {
@@ -164,11 +164,11 @@
   color: var(--color-foreground);
   background: transparent;
   transition: background 0.2s ease, color 0.2s ease;
-}
 
-@utility az-button-outline:hover {
-  background: var(--color-foreground);
-  color: var(--color-background);
+  &:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
 }
 
 /* Marquee horizontale */
