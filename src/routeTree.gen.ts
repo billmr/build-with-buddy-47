@@ -15,6 +15,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as SitemapXmlRouteImport } from './routes/sitemap.xml'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 
 const ProductsRoute = ProductsRouteImport.update({
@@ -47,6 +48,11 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProductsRoute,
 } as any)
+const SitemapXmlRoute = SitemapXmlRouteImport.update({
+  id: '/sitemap/xml',
+  path: '/sitemap/xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
   '/products/$id': typeof ProductsIdRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/products/$id': typeof ProductsIdRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
   '/products/$id': typeof ProductsIdRoute
+  '/sitemap/xml': typeof SitemapXmlRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
@@ -89,9 +98,17 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/products/$id'
+    | '/sitemap/xml'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/cart' | '/contact' | '/products/$id' | '/products'
+  to:
+    | '/'
+    | '/about'
+    | '/cart'
+    | '/contact'
+    | '/products/$id'
+    | '/sitemap/xml'
+    | '/products'
   id:
     | '__root__'
     | '/'
@@ -100,6 +117,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/products/$id'
+    | '/sitemap/xml'
     | '/products/'
   fileRoutesById: FileRoutesById
 }
@@ -109,6 +127,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   ProductsRoute: typeof ProductsRouteWithChildren
+  SitemapXmlRoute: typeof SitemapXmlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -155,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexRouteImport
       parentRoute: typeof ProductsRoute
     }
+    '/sitemap/xml': {
+      id: '/sitemap/xml'
+      path: '/sitemap/xml'
+      fullPath: '/sitemap/xml'
+      preLoaderRoute: typeof SitemapXmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/$id'
@@ -185,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   ProductsRoute: ProductsRouteWithChildren,
+  SitemapXmlRoute: SitemapXmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
