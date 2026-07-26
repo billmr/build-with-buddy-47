@@ -1,179 +1,95 @@
-/*
- * ============================================
- * CONTEXTE DU PANIER — CartProvider
- * ============================================
- *
- * Ce fichier crée un "Context" React pour partager le panier
- * entre toutes les pages et tous les composants.
- *
- * Grâce à ce contexte, le Header peut afficher le nombre d'articles,
- * la page Produit peut ajouter un article, et la page Panier peut
- * afficher/modifier le contenu.
- *
- * Le panier est aussi sauvegardé dans le localStorage du navigateur
- * pour qu'il ne soit pas perdu en rechargeant la page.
- */
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+const CART_KEY = "atelier-zero-cart";
 
-// Création du contexte React (vide au départ)
 const CartContext = createContext(null);
 
-/*
- * Clé utilisée pour stocker le panier dans le localStorage du navigateur.
- * Tu peux changer ce nom si tu veux.
- */
-const CART_STORAGE_KEY = "bill-store-cart";
-
-/*
- * Hook personnalisé pour utiliser le panier facilement dans n'importe quel composant.
- * Exemple d'utilisation : const { cart, addToCart } = useCart();
- */
-export function useCart() {
-  const context = useContext(CartContext);
-
-  if (!context) {
-    throw new Error("useCart doit être utilisé à l'intérieur de <CartProvider>");
-  }
-
-  return context;
-}
-
-/*
- * Composant fournisseur qui enveloppe l'application et fournit le panier.
- * Il doit être placé dans src/routes/__root.tsx autour de <Outlet />.
- */
 export function CartProvider({ children }) {
-  // État du panier : un tableau d'articles.
-  // Chaque article = { id, name, price, image, quantity }
-  const [cart, setCart] = useState([]);
+  const [items, setItems] = useState([]);
 
-  // Indique si le composant est bien chargé côté client
-  // (évite les problèmes de rendu serveur vs client avec le localStorage)
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  /*
-   * Au chargement du composant (côté client uniquement),
-   * on récupère le panier sauvegardé dans le localStorage.
-   */
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     try {
-      const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
-    } catch (error) {
-      console.error("Erreur lors de la lecture du panier :", error);
+      const raw = localStorage.getItem(CART_KEY);
+      if (raw) setItems(JSON.parse(raw));
+    } catch (e) {
+      console.error("Erreur lors de la lecture du panier", e);
     }
-
-    setIsHydrated(true);
   }, []);
 
-  /*
-   * À chaque modification du panier, on le sauvegarde dans le localStorage.
-   */
   useEffect(() => {
-    if (!isHydrated || typeof window === "undefined") return;
-
     try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-    } catch (error) {
-      console.error("Erreur lors de la sauvegarde du panier :", error);
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+    } catch (e) {
+      console.error("Erreur lors de l'enregistrement du panier", e);
     }
-  }, [cart, isHydrated]);
+  }, [items]);
 
-  /*
-   * Ajoute un produit au panier.
-   * Si le produit existe déjà, on augmente juste la quantité.
-   */
-  function addToCart(product) {
-    setCart((currentCart) => {
-      const existingItem = currentCart.find((item) => item.id === product.id);
-
-      if (existingItem) {
-        return currentCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+  const addToCart = useCallback((product, options) => {
+    const { color, size } = options;
+    const key = `${product.id}:${color}:${size}`;
+    setItems((prev) => {
+      const existing = prev.find((item) => item.key === key);
+      if (existing) {
+        return prev.map((item) => (item.key === key ? { ...item, quantity: item.quantity + 1 } : item));
       }
-
       return [
-        ...currentCart,
+        ...prev,
         {
+          key,
           id: product.id,
           name: product.name,
           price: product.price,
-          image: product.image,
+          currency: product.currency,
+          color,
+          size,
           quantity: 1,
+          image: product.images[color]?.front || Object.values(product.images)[0]?.front,
         },
       ];
     });
-  }
+  }, []);
 
-  /*
-   * Supprime complètement un article du panier.
-   */
-  function removeFromCart(productId) {
-    setCart((currentCart) => currentCart.filter((item) => item.id !== productId));
-  }
+  const removeFromCart = useCallback((key) => {
+    setItems((prev) => prev.filter((item) => item.key !== key));
+  }, []);
 
-  /*
-   * Change la quantité d'un article.
-   * Si la quantité passe à 0 ou moins, on supprime l'article.
-   */
-  function updateQuantity(productId, quantity) {
-    if (quantity <= 0) {
-      removeFromCart(productId);
+  const updateQuantity = useCallback((key, quantity) => {
+    if (quantity < 1) {
+      removeFromCart(key);
       return;
     }
+    setItems((prev) => prev.map((item) => (item.key === key ? { ...item, quantity } : item)));
+  }, [removeFromCart]);
 
-    setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
-      )
-    );
-  }
+  const clearCart = useCallback(() => {
+    setItems([]);
+  }, []);
 
-  /*
-   * Vide entièrement le panier.
-   */
-  function clearCart() {
-    setCart([]);
-  }
+  const totalItems = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
+  const totalPrice = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
 
-  /*
-   * Nombre total d'articles dans le panier (compte toutes les quantités).
-   */
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  /*
-   * Prix total du panier, en centimes.
-   */
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  // Valeur fournie aux composants enfants
-  const value = {
-    cart,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    totalItems,
-    totalPrice,
-    isHydrated,
-  };
+  const buildWhatsAppMessage = useCallback(() => {
+    if (items.length === 0) return "";
+    const lines = items.map((item) => {
+      return `- ${item.name} | ${item.color.toUpperCase()} | ${item.size} | Qté: ${item.quantity} | ${item.price.toLocaleString()} ${item.currency}`;
+    });
+    const total = `Total: ${totalPrice.toLocaleString()} ${items[0]?.currency}`;
+    return `Bonjour Atelier Zéro, je souhaite commander:\n${lines.join("\n")}\n${total}`;
+  }, [items, totalPrice]);
 
   return (
-    <CartContext.Provider value={value}>
+    <CartContext.Provider
+      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, buildWhatsAppMessage }}
+    >
       {children}
     </CartContext.Provider>
   );
+}
+
+export function useCart() {
+  const context = useContext(CartContext);
+  if (!context) throw new Error("useCart doit être utilisé dans un CartProvider");
+  return context;
 }
 
 export default CartProvider;
