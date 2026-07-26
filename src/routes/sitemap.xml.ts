@@ -5,14 +5,11 @@
  *
  * Ce fichier génère automatiquement le sitemap XML du site.
  * Il liste toutes les routes publiques indexables par les moteurs de recherche.
- *
- * Remplace BASE_URL par l'URL de ton site une fois publié.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-// TODO: remplacer par l'URL finale du projet une fois publié
 const BASE_URL = "https://project--id.lovable.app";
 
 interface SitemapEntry {
@@ -26,7 +23,6 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        // Liste des routes publiques du site
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/products", changefreq: "weekly", priority: "0.9" },
