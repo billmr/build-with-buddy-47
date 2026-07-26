@@ -15,7 +15,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
-import { Route as SitemapXmlRouteImport } from './routes/sitemap.xml'
+import { Route as SitemapDotXmlRouteImport } from './routes/sitemap[.].xml'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 
 const ProductsRoute = ProductsRouteImport.update({
@@ -48,9 +48,9 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProductsRoute,
 } as any)
-const SitemapXmlRoute = SitemapXmlRouteImport.update({
-  id: '/sitemap/xml',
-  path: '/sitemap/xml',
+const SitemapDotXmlRoute = SitemapDotXmlRouteImport.update({
+  id: '/sitemap./xml',
+  path: '/sitemap./xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
@@ -66,7 +66,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
   '/products/$id': typeof ProductsIdRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
+  '/sitemap./xml': typeof SitemapDotXmlRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -75,7 +75,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/products/$id': typeof ProductsIdRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
+  '/sitemap./xml': typeof SitemapDotXmlRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
@@ -86,7 +86,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRouteWithChildren
   '/products/$id': typeof ProductsIdRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
+  '/sitemap./xml': typeof SitemapDotXmlRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
@@ -98,7 +98,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/products/$id'
-    | '/sitemap/xml'
+    | '/sitemap./xml'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -107,7 +107,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/contact'
     | '/products/$id'
-    | '/sitemap/xml'
+    | '/sitemap./xml'
     | '/products'
   id:
     | '__root__'
@@ -117,7 +117,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/products/$id'
-    | '/sitemap/xml'
+    | '/sitemap./xml'
     | '/products/'
   fileRoutesById: FileRoutesById
 }
@@ -127,7 +127,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   ProductsRoute: typeof ProductsRouteWithChildren
-  SitemapXmlRoute: typeof SitemapXmlRoute
+  SitemapDotXmlRoute: typeof SitemapDotXmlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -174,11 +174,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexRouteImport
       parentRoute: typeof ProductsRoute
     }
-    '/sitemap/xml': {
-      id: '/sitemap/xml'
-      path: '/sitemap/xml'
-      fullPath: '/sitemap/xml'
-      preLoaderRoute: typeof SitemapXmlRouteImport
+    '/sitemap./xml': {
+      id: '/sitemap./xml'
+      path: '/sitemap./xml'
+      fullPath: '/sitemap./xml'
+      preLoaderRoute: typeof SitemapDotXmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products/$id': {
@@ -211,18 +211,8 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   ProductsRoute: ProductsRouteWithChildren,
-  SitemapXmlRoute: SitemapXmlRoute,
+  SitemapDotXmlRoute: SitemapDotXmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
