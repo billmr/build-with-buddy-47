@@ -5,6 +5,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  Link,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -13,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../components/CartProvider";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { CartDrawer } from "../components/CartDrawer";
 
 function NotFoundComponent() {
   return (
@@ -20,12 +22,12 @@ function NotFoundComponent() {
       <div className="max-w-md">
         <h1 className="text-7xl font-bold">404</h1>
         <p className="mt-4 text-sm uppercase tracking-widest text-white/60">Page not found</p>
-        <a
-          href="/"
+        <Link
+          to="/"
           className="mt-6 inline-block border border-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black"
         >
           Go home
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -52,12 +54,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try again
           </button>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="border border-white/30 px-6 py-3 text-xs font-bold uppercase tracking-widest text-white/80 hover:border-white hover:text-white"
           >
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -79,7 +81,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -124,7 +125,7 @@ function AppShell() {
         <Outlet />
       </div>
       <Footer />
-      {/* CartDrawer est injecté ici; on peut l'activer dans une prochaine passe */}
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ function HomePage() {
   return (
     <main className="bg-black text-white">
       {/* Hero vidéo */}
-      <section className="relative -mt-[var(--header-height)] h-screen overflow-hidden">
+      <section className="relative -mt-[var(--header-height)] flex h-screen flex-col overflow-hidden">
         <video
           autoPlay
           muted
@@ -29,21 +29,43 @@ function HomePage() {
         >
           <source src="/assets/videos/hero-atelier-zero.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
-          <p className="text-label mb-4 text-white/70">Atelier Ø — Paris</p>
-          <p className="text-label mb-6 text-white/70">Project Genesis / V.1.0</p>
-          <p className="text-label mb-12 text-white/70">Drop 001 — Available Now</p>
-          <h1 className="text-display text-5xl text-white md:text-7xl lg:text-8xl">
-            Chapter 0 — Genesis
-          </h1>
-          <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-            <Link to="/shop" className="az-button">
-              Shop the Collection
-            </Link>
-            <Link to="/about" className="az-button-outline">
-              Discover the Mindset
-            </Link>
+        <div className="absolute inset-0 bg-black/50" />
+
+        {/* Contenu du Hero, en colonne, réparti du haut vers le bas */}
+        <div className="container-az relative z-10 flex h-full flex-col justify-between py-32">
+          {/* Ligne du haut : nom de l'atelier / version du projet */}
+          <div className="flex items-start justify-between">
+            <p className="text-label text-white/70">Atelier Ø — Paris</p>
+            
+          </div>
+
+          {/* Bloc central : badge, eyebrow, titre, tagline, boutons */}
+          <div className="max-w-3xl">
+            <div className="mb-6 inline-flex items-center gap-2 border border-white/30 px-4 py-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+              <span className="text-label text-white">Drop 001 — Available Now</span>
+            </div>
+            <p className="text-label mb-3 text-white/70">Chapter 0 — Genesis</p>
+            <h1 className="text-display text-5xl text-white md:text-7xl lg:text-8xl">
+              Project Genesis
+            </h1>
+            <p className="mt-6 max-w-md text-lg text-white/70">
+              Start from nothing. Become everything.
+            </p>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Link to="/shop" className="az-button">
+                Shop the Collection
+              </Link>
+              <Link to="/about" className="az-button-outline">
+                Discover the Mindset
+              </Link>
+            </div>
+          </div>
+
+          {/* Ligne du bas : accroche + indicateur de scroll */}
+          <div className="flex items-end justify-between">
+            <p className="text-label text-white/70">Streetwear Engineered For Resilience</p>
+            <p className="text-label text-white/70">Scroll to enter ↓</p>
           </div>
         </div>
       </section>

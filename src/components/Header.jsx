@@ -7,16 +7,31 @@
  * et accès au panier (drawer latéral).
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "./CartProvider";
 
 export function Header({ onOpenCart }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  // true tant qu'on est tout en haut de la page (donc encore sur le Hero)
+  const [isAtTop, setIsAtTop] = useState(true);
   const { totalItems } = useCart();
   const { location } = useRouterState();
   const isHome = location.pathname === "/";
+
+  // Écoute le scroll : dès qu'on dépasse 80px, on considère qu'on a quitté le Hero
+  useEffect(() => {
+    function handleScroll() {
+      setIsAtTop(window.scrollY < 80);
+    }
+    handleScroll(); // vérifie tout de suite au montage (utile si on arrive déjà scrollé)
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Transparent uniquement sur l'accueil ET tant qu'on est en haut de page
+  const showTransparent = isHome && isAtTop;
 
   const links = [
     { to: "/", label: "Accueil" },
@@ -26,15 +41,15 @@ export function Header({ onOpenCart }) {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-[var(--header-height)] bg-black transition-colors"
-      style={{ backgroundColor: isHome ? "transparent" : "#000000" }}
+      className="fixed top-0 left-0 right-0 z-50 h-[var(--header-height)] transition-colors duration-300"
+      style={{ backgroundColor: showTransparent ? "transparent" : "#000000" }}
     >
       <div className="container-az flex h-full items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <img
             src="/assets/logo-white.png"
             alt="Atelier Zéro"
-            className="h-8 w-auto"
+            className="h-40 w-auto"
           />
         </Link>
 

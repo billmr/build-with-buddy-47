@@ -2,22 +2,34 @@
  * ============================================
  * CARTE PRODUIT — ATELIER ZÉRO
  * ============================================
+ *
+ * Affiche un produit avec ses variantes de couleur.
+ * Cliquer sur un rond de couleur change l'image affichée
+ * et le nom de la couleur, sans recharger la page.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatPriceCompact } from "../lib/products";
 
 export function ProductCard({ product }) {
-  const firstColor = product.colors[0]?.id || "black";
-  const image = product.images[firstColor]?.front || Object.values(product.images)[0]?.front;
+  // Couleur actuellement sélectionnée (par défaut : la première de la liste)
+  const [selectedColorId, setSelectedColorId] = useState(product.colors[0]?.id || "black");
+
+  // Objet couleur complet (id, name, hex) correspondant à la sélection
+  const selectedColor =
+    product.colors.find((color) => color.id === selectedColorId) || product.colors[0];
+
+  // Image "front" de la couleur sélectionnée (avec repli si jamais absente)
+  const image =
+    product.images[selectedColorId]?.front || Object.values(product.images)[0]?.front;
 
   return (
-    <article className="group relative bg-[#111]">
+    <article className="group relative">
       <Link to="/product/$slug" params={{ slug: product.id }} className="relative block aspect-[4/5] overflow-hidden bg-[#e5e5e5]">
         <img
           src={image}
-          alt={product.name}
+          alt={`${product.name} — ${selectedColor?.name}`}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           loading="lazy"
         />
@@ -36,28 +48,37 @@ export function ProductCard({ product }) {
 
       <div className="mt-4 flex items-start justify-between gap-4">
         <div>
-          <p className="text-[10px] font-medium uppercase tracking-widest text-white/50">{product.collection}</p>
-          <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-white">
+          <p className="text-[10px] font-medium uppercase tracking-widest text-black/50">{product.collection}</p>
+          <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-black">
             <Link to="/product/$slug" params={{ slug: product.id }}>
               {product.name}
             </Link>
           </h3>
           <div className="mt-2 flex items-center gap-2">
-            {product.colors.map((color) => (
-              <span
-                key={color.id}
-                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/60"
-              >
-                <span
-                  className="inline-block h-3 w-3 rounded-full border border-white/20"
+            {product.colors.map((color) => {
+              const isSelected = color.id === selectedColorId;
+              return (
+                <button
+                  key={color.id}
+                  type="button"
+                  onClick={() => setSelectedColorId(color.id)}
+                  aria-label={color.name}
+                  aria-pressed={isSelected}
+                  className={`h-3.5 w-3.5 rounded-full border transition-all ${
+                    isSelected
+                      ? "border-black ring-1 ring-black ring-offset-2 ring-offset-[#f2f1ed]"
+                      : "border-black/20"
+                  }`}
                   style={{ backgroundColor: color.hex }}
                 />
-              </span>
-            ))}
-            <span className="text-[10px] uppercase tracking-widest text-white/60">{product.colors[0]?.name}</span>
+              );
+            })}
+            <span className="text-[10px] uppercase tracking-widest text-black/60">
+              {selectedColor?.name}
+            </span>
           </div>
         </div>
-        <span className="text-sm font-bold text-white">{formatPriceCompact(product.price)}</span>
+        <span className="text-sm font-bold text-black">{formatPriceCompact(product.price)}</span>
       </div>
     </article>
   );
